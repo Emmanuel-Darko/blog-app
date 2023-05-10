@@ -28,7 +28,7 @@ const loginMiddleware = async(req, res, next) => {
         return res.status(404).json('Check email or password...')
     
     const token = jwt.sign({
-            exp: Math.floor(Date.now() / 1000) + (60 * 60), //expires in 1hr
+            exp: Math.floor(Date.now() / 1000) + (5 * 60), //expires in 1minute
             email, // email to be signed
         },
         jwtSecret // private key

@@ -5,6 +5,7 @@ const PostModel = require('../models/postModel')
 
 const makePostController = async(req, res) => {
     const {title, content} = req.body
+    const image = req.file?.filename
     // const foundUser = users.find((user) => user.email == req.decodedEmail)   //array option
     const foundUser = await UserModel.findOne({email: req.decodedEmail})
     if(!foundUser)
@@ -15,7 +16,8 @@ const makePostController = async(req, res) => {
         title: title,
         slug: title.toLowerCase().split(' ').join('-'),
         content: content,
-        date: new Date()
+        date: new Date(),
+        image
     }
     // posts = [newPost, ...posts]   //array option
 
@@ -31,13 +33,17 @@ const getUserPostsController = async(req, res) => {
     // const userPosts = posts.filter((post) => post.id == foundUser.uuid)   //array option
     const userPosts = await PostModel.find(
         {id: foundUser.uuid}, 
-        "-_id title slug content date"   //Selects fields to be shown, minus id
+        "-_id title slug content date image"   //Selects fields to be shown, minus id
     )
     .sort({date: -1})
     .exec()
+    
+    const updatedUserPosts = userPosts.map(post => {
+        post.image = process.env.APP_URL + '/uploads/posts/'+ post.image;
+        return post;
+    });
 
-
-    res.status(200).json(userPosts)
+    res.status(200).json(updatedUserPosts)
 }
 
 const getAllPostsController = async(req, res) => {
@@ -45,11 +51,16 @@ const getAllPostsController = async(req, res) => {
     // res.status(200).json(posts)
     const allPosts = await PostModel.find(
         {},
-        "-_id title slug content date"
+        "-_id title slug content date image"
     )
     .sort({date: -1})
     .exec()
-    res.status(200).json(allPosts)
+
+    const updatedPosts = allPosts.map((post) => {
+        post.image ? post.image = process.env.APP_URL + '/uploads/posts/' + post.image : post
+        return post
+    })
+    res.status(200).json(updatedPosts)
 }
 
 module.exports = {

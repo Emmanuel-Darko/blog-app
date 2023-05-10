@@ -22,7 +22,7 @@ const registerController = async (req, res) => {
 const loginController = (req, res) => {
     const {email} = req.body
     const token = req.token
-    res.status(200).json(`${email} logged in: ${token}`)
+    res.status(200).json(token)
 }
 
 module.exports = {
