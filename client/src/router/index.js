@@ -16,7 +16,7 @@ const router = createRouter({
       component:AuthPage
     },
     {
-      path: '/home',
+      path: '/home/:id',
       name: 'home',
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route

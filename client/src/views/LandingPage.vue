@@ -77,14 +77,11 @@
         -5px -5px 9px #ffffe7;
     }
     .l-buttons a button{
-        color: #fff;
+        /* color: #fff; */
         text-decoration: none;
     }
     .l-buttons button:hover{
         box-shadow: none;
         border: 2px solid #ffce6c;
     }
-
-
-
 </style>
