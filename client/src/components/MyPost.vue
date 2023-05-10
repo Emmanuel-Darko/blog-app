@@ -35,7 +35,8 @@
         }).then(res => {
             posts.value = res.data
         }).catch(err => {
-            alert(err.response.data)
+            // alert(err.response.data)
+            this.$swal(err.response.data)
         })
         
     })

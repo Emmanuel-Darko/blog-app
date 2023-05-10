@@ -17,8 +17,11 @@
 </template>
 
 <script setup>
-    import {onBeforeMount, ref} from 'vue'
+    import {onBeforeMount, ref, inject} from 'vue'
     import axios from 'axios'
+    import {useRouter} from 'vue-router'
+    const route = useRouter()
+    const swal = inject('$swal')
 
     let posts = ref([])
     onBeforeMount(() => {
@@ -30,7 +33,16 @@
         }).then(res => {
             posts.value = res.data
         }).catch(err => {
-            alert(err.response.data)
+            // alert(err.response.data)
+            swal.fire({
+                icon: 'error',
+                text: err.response.data,
+                confirmButtonText: 'Login',
+                confirmButtonColor: '#ffce6c',
+            }).then((result) =>{
+                if(result.isConfirmed)
+                    route.push('/auth/login')
+            })
         })
         
     })
