@@ -14,6 +14,11 @@
             </div>
         </div>
     </div>
+    <div class="no-post" v-if="posts.length == 0">
+        <h3>No posts made...</h3>
+        <router-link to="/home/profile"><h4>Pin your first post 🧷</h4></router-link>
+        <img class="pinpost" src="/images/pin.svg" alt="pin">
+    </div>
 </template>
 
 <script setup>
@@ -39,6 +44,10 @@
                 text: err.response.data,
                 confirmButtonText: 'Login',
                 confirmButtonColor: '#ffce6c',
+                allowOutsideClick: false,
+                customClass:{
+                    text: 'popup-title'
+                }
             }).then((result) =>{
                 if(result.isConfirmed)
                     route.push('/auth/login')
@@ -84,5 +93,17 @@
         border-radius: 8px;
         cursor: pointer;
         border: 1px solid #ffce6c;
+    }
+    .no-post{
+        margin-top: 50px;
+    }
+    .pinpost{
+        width: 200px;
+        position: absolute;
+        bottom: 50px;
+    }
+    .popup-title{
+        font-family: 'Sono';
+        font-size: 30px;
     }
 </style>

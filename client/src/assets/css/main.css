@@ -1,0 +1,8 @@
+.swal2-container.swal2-center>.swal2-popup{
+    /* background-color: #121212 !important; */
+    font-family: 'Sono';
+    font-size: large;
+  }
+  .swal2-html-container, .swal2-title{
+    /* color: white !important; */
+  }

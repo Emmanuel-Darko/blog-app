@@ -14,7 +14,7 @@
             <h5 v-else><router-link :to="{name:'auth', params:{id:'register'}}">Don't have an account, Register?</router-link></h5>
         </form>
         <img v-if="title=='Login'" class="auth-img" src="/images/auth_img.svg" alt="img">
-        <img v-else class="auth-img2" src="/images/auth_img2.svg" alt="img">
+        <img v-else class="auth-img2" src="/images/auth_img.svg" alt="img">
     </div>
 </template>
 
@@ -156,8 +156,8 @@
     }
     .auth-img2{
         width: 30%;
-        bottom: 1%;
-        left:0;
+        left: 0;
         position: absolute;
+        transform: scaleX(-1);
     }
 </style>

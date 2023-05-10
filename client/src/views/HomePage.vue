@@ -9,6 +9,7 @@
             <li><router-link :to="{name:'home', params:{id:'allposts'}}"> All Posts </router-link></li>
             <li><router-link  :to="{name:'home', params:{id:'myposts'}}"> My Posts </router-link></li>
             <li><router-link  :to="{name:'home', params:{id:'profile'}}"> Profile </router-link></li>
+            <button v-if="postRoute=='profile'" @click="logoutUser()">Log out</button>
         </ul>
         
         <AllPost v-if="postRoute=='allposts'"/>
@@ -50,6 +51,10 @@
             },
             showMyProfile(){
                 this.postRoute = 'profile'
+            },
+            logoutUser(){
+                localStorage.clear('usertoken')
+                this.$router.push('/auth/login')
             }
         },
     }
@@ -110,5 +115,23 @@
         background-color: #fdc659;
         box-shadow: none;
         text-decoration: none;
+    }
+    .nav button{
+        font-family: 'Sono';
+        position: absolute;
+        right: 50px;
+        margin-top: -3px;
+        width: 100px;
+        padding: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        border: none;
+        border-radius: 5px;
+        background: #ffce6c;
+        box-shadow: 20px 20px 60px #bebebe,
+        -20px -20px 60px #ffffff;
+    }
+    .nav button:hover{
+        box-shadow: none;
     }
 </style>

@@ -19,7 +19,7 @@
 
 <style lang="css" scoped>
     div .toast1{
-        /* --tcolor:`${red}`; */
+        font-family: 'Sono';
         position: absolute;
         width: 20%;
         margin: 0 auto;
@@ -33,7 +33,7 @@
         -5px -5px 9px #ffffe7;
     }
     div .toast2{
-        /* --tcolor:`${red}`; */
+        font-family: 'Sono';
         position: absolute;
         width: 20%;
         margin: 0 auto;

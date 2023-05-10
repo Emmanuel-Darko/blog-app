@@ -17,12 +17,11 @@
 </template>
 
 <script setup>
-    import {onBeforeMount, ref} from 'vue'
+    import {onBeforeMount, ref, inject} from 'vue'
     import axios from 'axios'
     import {useRouter} from 'vue-router'
-    // const props = defineProps({
-    //     showToast:String
-    // })
+    const swal = inject('$swal')
+
     const route = useRouter()
     let userProfile = ref([])
     let postTitle = ref('')
@@ -34,7 +33,17 @@
         .then(res => {
             userProfile.value = res.data
         }).catch(err => {
-            alert(err.response.data)
+            // alert(err.response.data)
+            swal.fire({
+                icon: 'error',
+                text: err.response.data,
+                confirmButtonText: 'Login',
+                confirmButtonColor: '#ffce6c',
+                allowOutsideClick: false
+            }).then((result) =>{
+                if(result.isConfirmed)
+                    route.push('/auth/login')
+            })
         })
         
     })
@@ -97,10 +106,10 @@
     }
     .post-button button{
         padding: 10px;
-        width: 150px;
+        width: 120px;
         font-size: 16px;
         border: none;
-        border-radius: 10px;
+        border-radius: 7px;
         box-shadow: 20px 20px 60px #bebebe,
         -20px -20px 60px #ffffff;
     }
@@ -118,8 +127,6 @@
         cursor: pointer;
         background-color: #ffce6c;
     }
-
-
     .pinpost{
         width: 150px;
         position: absolute;
