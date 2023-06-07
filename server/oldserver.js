@@ -114,7 +114,7 @@ app.post('/user', (req, res) => {
 
 app.post('/post', (req, res)=> {
     const {username, post} = req.body
-    const stringPost
+    // const stringPost
     const token = jwt.sign(username, jwtSecret)
     if(token){
         db.query(`SELECT uuid FROM users WHERE token = "${token}"`, (err, result)=> {
