@@ -12,7 +12,7 @@ const makePostController = async(req, res) => {
         return res.status(400).json('user not found, login...')
 
     const newPost = {
-        id: foundUser.uuid,
+        userId: foundUser.uuid,
         title: title,
         slug: title.toLowerCase().split(' ').join('-'),
         content: content,
@@ -32,8 +32,8 @@ const getUserPostsController = async(req, res) => {
         return req.status(400).json('user not found, login...')
     // const userPosts = posts.filter((post) => post.id == foundUser.uuid)   //array option
     const userPosts = await PostModel.find(
-        {id: foundUser.uuid}, 
-        "-_id title slug content date image"   //Selects fields to be shown, minus id
+        {userId: foundUser.uuid}, 
+        "_id userId title slug content date image"   //Selects fields to be shown, minus id
     )
     .sort({date: -1})
     .exec()
@@ -51,7 +51,7 @@ const getAllPostsController = async(req, res) => {
     // res.status(200).json(posts)
     const allPosts = await PostModel.find(
         {},
-        "-_id title slug content date image"
+        "_id userId title slug content date image"
     )
     .sort({date: -1})
     .exec()

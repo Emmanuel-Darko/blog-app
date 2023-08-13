@@ -69,11 +69,13 @@
                     .then(res=> {
                         console.log(res.data)
                         localStorage.setItem('usertoken', res.data)
-                        this.$router.push('/home/allposts')
+                        this.$router.push('/home/allPost')
                     })
                     .catch(err=> {
-                        err.response.data.message ?  
-                        this.showToast(err.response.data.message, 'false') : this.showToast(err.response.data, 'false')
+                        if(err.response.data.message)
+                            this.showToast(err.response.data.message, 'false')
+                        else
+                            this.showToast(err.response.data, 'false')
                     })
                     .finally(
                         this.clearForm()

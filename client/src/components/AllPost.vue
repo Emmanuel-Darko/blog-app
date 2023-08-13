@@ -1,27 +1,18 @@
 <template>
-    <div class="post-card" v-for="(post, index) in posts" :key="index">
-        <h3>{{ post.title }}</h3>
-        <span><i> {{ post.slug }} </i></span>
-        <p>{{ post.content }}</p>
-        <div class="post-bottom">
-            <div class="like-buttons">
-                <button>👍</button>
-                <button>👎</button>
-            </div>
-            <div>
-                <span>{{ getDate(post.date) }}</span> &emsp13; - &emsp13;
-                <span>{{ getTime(post.date) }}</span>
-            </div>
+    <div class="container">
+        <PostCard v-for="post in posts" :post="post" type="public"/>
+
+        <div class="no-post" v-if="posts.length == 0">
+            <h3>No posts made...</h3>
+            <router-link to="/home/profile"><h4>Pin your first post 🧷</h4></router-link>
+            <img class="pinpost" src="/images/pin.svg" alt="pin">
         </div>
-    </div>
-    <div class="no-post" v-if="posts.length == 0">
-        <h3>No posts made...</h3>
-        <router-link to="/home/profile"><h4>Pin your first post 🧷</h4></router-link>
-        <img class="pinpost" src="/images/pin.svg" alt="pin">
     </div>
 </template>
 
 <script setup>
+    import PostCard from './PostCard.vue';
+
     import {onBeforeMount, ref, inject} from 'vue'
     import axios from 'axios'
     import {useRouter} from 'vue-router'
@@ -68,34 +59,12 @@
 </script>
     
 <style lang="css" scoped>
-    .post-card{
-        width: 50%;
-        margin: 30px 0;
-        padding: 20px;
-        border: 1px solid #ffce6c;
-        border-left: 5px solid #ffce6c;
-        border-radius: 10px;
-        background: #ffffff;
-        box-shadow:  20px 20px 60px #bebebe,
-        -20px -20px 60px #ffffff;
-    }
-    .post-card div{
-        text-align: right;
-    }
-    .post-bottom{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .like-buttons button{
-        margin: 5px;
-        padding: 8px;
-        border-radius: 8px;
-        cursor: pointer;
-        border: 1px solid #ffce6c;
+    .container{
+        width: 100%;
     }
     .no-post{
         margin-top: 50px;
+        transition: 0.5s ease-in
     }
     .pinpost{
         width: 200px;

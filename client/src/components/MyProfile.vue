@@ -1,19 +1,21 @@
 <template>
-    <div class="welcome">
-        <h4>Welcome... <router-link to=""> {{ userProfile.email }} </router-link></h4>
+    <div class="container">
+        <div class="welcome">
+            <h4>Welcome... <router-link to=""> {{ userProfile.email }} </router-link></h4>
+            <img class="pinpost" src="/images/pin.svg" alt="pin">
+        </div>
+
+        <div class="post-card">
+            <input type="text" v-model="postTitle" placeholder="Enter post title">
+            <textarea v-model="postContent" id="content" cols="25" rows="10"> Start post...</textarea>
+        </div>
+        <div class="post-button">
+            <button @click="cancelPost()"> Cancel 🚫 </button>
+            <button @click="submitPost()"> Pin 🧷 </button>
+        </div>
+        
         <img class="pinpost" src="/images/pin.svg" alt="pin">
     </div>
-
-    <div class="post-card">
-        <input type="text" v-model="postTitle" placeholder="Enter post title">
-        <textarea v-model="postContent" id="content" cols="25" rows="10"> Start post...</textarea>
-    </div>
-    <div class="post-button">
-        <button @click="cancelPost()"> Cancel 🚫 </button>
-        <button @click="submitPost()"> Pin 🧷 </button>
-    </div>
-    
-    <img class="pinpost" src="/images/pin.svg" alt="pin">
 </template>
 
 <script setup>
@@ -23,7 +25,7 @@
     const swal = inject('$swal')
 
     const route = useRouter()
-    let userProfile = ref([])
+    let userProfile = ref({})
     let postTitle = ref('')
     let postContent = ref('')
 
@@ -66,6 +68,9 @@
 </script>
     
 <style lang="css" scoped>
+    .container{
+        width: 100%;
+    }
     .welcome{
         margin-top: 50px;
     }

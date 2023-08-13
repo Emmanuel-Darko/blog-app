@@ -1,51 +1,49 @@
 <template>
-    <div class="post-card" v-for="(post, index) in posts" :key="index">
-        <h3>{{ post.title }}</h3>
-        <span><i> {{ post.slug }} </i></span>
-        <p>{{ post.content }}</p>
-        <div class="action-btns">
-            <button @click="editPost(post.slug)" class="edit-btn">🖍</button>
-            <button @click="deletePost(post.slug)" class="delete-btn">❌</button>
+    <div class="container">
+        <PostCard v-for="(post, index) in posts" :post="post" type="private" :handleEdit="handleEdit" :key="post+index" :handleCloseEdit="handleCloseEdit"/>
+
+        <div class="no-post" v-if="posts.length == 0">
+            <h3>No posts made...</h3>
+            <router-link to="/home/profile"><h4>Pin your first post 🧷</h4></router-link>
+            <img class="pinpost" src="/images/pin.svg" alt="pin">
         </div>
+
+        <div v-if="isEditing" class="overlay">
         
-        <div class="post-bottom">
-            <div class="like-buttons">
-                <button disabled>👍 0</button>
-                <button disabled>👎 0</button>
-            </div>
-            <div>
-                <span>{{ getDate(post.date) }}</span> &emsp13; - &emsp13;
-                <span>{{ getTime(post.date) }}</span>
-            </div>
         </div>
-    </div>
-    <div class="no-post" v-if="posts.length == 0">
-        <h3>No posts made...</h3>
-        <router-link to="/home/profile"><h4>Pin your first post 🧷</h4></router-link>
-        <img class="pinpost" src="/images/pin.svg" alt="pin">
     </div>
 </template>
 
 <script setup>
+    import PostCard from './PostCard.vue';
+
     import {onBeforeMount, ref, inject} from 'vue'
     import {useRouter} from 'vue-router'
     import axios from 'axios'
     const swal = inject('$swal')
     const route = useRouter()
     let posts = ref([])
+    let isEditing = ref(false)
 
-    onBeforeMount(() => {
+    onBeforeMount(async() => {
         const usertoken = localStorage.getItem('usertoken')
-        axios.get('http://localhost:4000/user/posts', {
+        await axios.get('http://localhost:4000/user/posts', {
             headers:{
                 usertoken
             }
-        }).then(res => {
-            posts.value = res.data
+        }).then(async (res) => {
+            const apiPosts = res.data
+            let newPost = []
+            Object.keys(apiPosts).forEach((key) => { //Create a new posts object
+                // Append active field to the object
+                newPost.push({...apiPosts[key], active:false})
+            })
+            posts.value = newPost
+            console.log("posts", newPost);
         }).catch(err => {
             swal.fire({
                 icon: 'error',
-                text: err.response.data,
+                text: (err.response? err.response.data : err.message) ,
                 confirmButtonText: 'Login',
                 confirmButtonColor: '#ffce6c',
                 allowOutsideClick: false
@@ -57,72 +55,30 @@
         
     })
 
-    // custom functions
-    const getDate = (date) => {
-        const dd = new Date(String(date))
-        return dd.toLocaleDateString('en-UK')
+    const handleEdit = (postId) => {
+        //Posts is an array of objects set during mount
+        posts.value.forEach((post,index) => {
+            if(post._id == postId){
+                posts.value[index].active = true; 
+                isEditing.value = true
+            }
+            else
+                posts.value[index].active = false
+        })
     }
-    const getTime = (time) => {
-        const tt = new Date(String(time))
-        return tt.toLocaleTimeString()
-    }
-    const editPost = (post) => {
-        alert(`Edit ${post}`)
-    }
-    const deletePost = (post) => {
-        alert(`Delete ${post}`)
+    const handleCloseEdit = () => {
+        isEditing.value = false
+        posts.value.forEach((post) => {
+            post.active = false
+        })
     }
 </script>
     
 <style lang="css" scoped>
-    .post-card{
-        position: relative;
-        width: 50%;
-        margin: 30px 0;
-        padding: 20px;
-        border: 1px solid #ffce6c;
-        border-left: 5px solid #ffce6c;
-        border-radius: 10px;
-        background: #ffffff;
-        box-shadow:  20px 20px 60px #bebebe,
-        -20px -20px 60px #ffffff;
-    }
-    .post-card div{
-        text-align: right;
-    }
-    .action-btns{
-        position: absolute;
-        right: 15px;
-        top: 10px;
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-    }
-    .edit-btn{
-        padding: 10px;
-        cursor: pointer;
-        border-radius: 5px;
-        background-color: #ffce6c;
-    }
-    .delete-btn{
-        padding: 10px;
-        cursor: pointer;
-        border-radius: 5px;
-        background-color: #ffce6c;
-    }
-    .post-bottom{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .like-buttons button{
-        margin: 5px;
-        padding: 8px;
-        border-radius: 8px;
-        cursor: pointer;
-        border: 1px solid #ffce6c;
+    .container{
+        width: 100%;
+        height: 100%;
+        /* background: red; */
     }
     .no-post{
         margin-top: 50px;
@@ -131,5 +87,18 @@
         width: 200px;
         position: absolute;
         bottom: 50px;
+    }
+    .overlay{
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0%;
+        background-color: #1f1e1d84;
+        /* background: rgba(255, 255, 255, 0.2); */
+        border-radius: 16px;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
     }
 </style>
